@@ -1,0 +1,9 @@
+[Unit]
+Description=Raspberry Pi Exporter for Prometheus
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/rpi_exporter -p 9111
+
+[Install]
+WantedBy=multi-user.target
