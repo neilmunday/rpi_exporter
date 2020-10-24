@@ -3,7 +3,7 @@
 #
 #    This file is part of
 #
-#    pymsync is a tool to synchronise files between many hosts using rsync.
+#    rpi_exporter is a tool to synchronise files between many hosts using rsync.
 #    It uses a divide and conqueor method to efficiently copy files
 #    between hosts on a network.
 #
