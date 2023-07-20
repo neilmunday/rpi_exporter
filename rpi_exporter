@@ -44,51 +44,51 @@ import subprocess
 import time
 
 def runCommand(cmd):
-	'''
-	Execute the given command and return a tuple that contains the
-	return code, std out and std err output.
-	'''
-	process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	stdout, stderr = process.communicate()
-	return (process.returncode, stdout.decode(), stderr.decode())
+    '''
+    Execute the given command and return a tuple that contains the
+    return code, std out and std err output.
+    '''
+    process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    return (process.returncode, stdout.decode(), stderr.decode())
 
 class RpiCollector(object):
-	'''
-	A simple Collector for the Raspberry Pi.
-	'''
+    '''
+    A simple Collector for the Raspberry Pi.
+    '''
 
-	__cpuTempFile = '/sys/devices/virtual/thermal/thermal_zone0/hwmon0/temp1_input'
-	__gpuTempRe = re.compile('temp=([0-9]+\.[0-9]+)')
+    __cpuTempFile = '/sys/devices/virtual/thermal/thermal_zone0/hwmon0/temp1_input'
+    __gpuTempRe = re.compile('temp=([0-9]+\.[0-9]+)')
 
-	def __init__(self):
-	        pass
+    def __init__(self):
+            pass
 
-	def collect(self):
-		# get core temperature
-		cpuTemp = 0
-		if os.path.exists(RpiCollector.__cpuTempFile):
-			with open(RpiCollector.__cpuTempFile, 'r') as f:
-				cpuTemp = float(f.read()) / 1000.0
-		# get GPU temp
-		gpuTemp = 0
-		rtn, stdout, stderr = runCommand('/opt/vc/bin/vcgencmd measure_temp')
-		if rtn == 0:
-			match = RpiCollector.__gpuTempRe.match(stdout)
-			if match:
-				gpuTemp = float(match.group(1))
+    def collect(self):
+        # get core temperature
+        cpuTemp = 0
+        if os.path.exists(RpiCollector.__cpuTempFile):
+            with open(RpiCollector.__cpuTempFile, 'r') as f:
+                cpuTemp = float(f.read()) / 1000.0
+        # get GPU temp
+        gpuTemp = 0
+        rtn, stdout, stderr = runCommand('/opt/vc/bin/vcgencmd measure_temp')
+        if rtn == 0:
+            match = RpiCollector.__gpuTempRe.match(stdout)
+            if match:
+                gpuTemp = float(match.group(1))
 
-		gauge = GaugeMetricFamily('rpi_temperatures', 'Raspberry Pi temperatures', labels=['temperature'])
-		gauge.add_metric(['cpu'], cpuTemp)
-		gauge.add_metric(['gpu'], gpuTemp)
-		yield gauge
+        gauge = GaugeMetricFamily('rpi_temperatures', 'Raspberry Pi temperatures', labels=['temperature'])
+        gauge.add_metric(['cpu'], cpuTemp)
+        gauge.add_metric(['gpu'], gpuTemp)
+        yield gauge
 
 if __name__ == '__main__':
 
-	parser = argparse.ArgumentParser(description='Provides Prometheus CPU and GPU metrics for the Raspberry Pi', add_help=True)
-	parser.add_argument('-p', '--port', help='Specify the port to listen on', dest='port', type=int, default=9111)
-	args = parser.parse_args()
+    parser = argparse.ArgumentParser(description='Provides Prometheus CPU and GPU metrics for the Raspberry Pi', add_help=True)
+    parser.add_argument('-p', '--port', help='Specify the port to listen on', dest='port', type=int, default=9111)
+    args = parser.parse_args()
 
-	start_http_server(args.port)
-	REGISTRY.register(RpiCollector())
-	while True:
-		time.sleep(1)
+    start_http_server(args.port)
+    REGISTRY.register(RpiCollector())
+    while True:
+        time.sleep(1)
