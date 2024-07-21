@@ -1,6 +1,6 @@
 pkgname=('rpi_exporter')
 pkgver=1
-pkgrel=2
+pkgrel=3
 pkgdesc='Raspberry Pi metrics exporter for Prometheus'
 arch=('any')
 license=('GPL')
