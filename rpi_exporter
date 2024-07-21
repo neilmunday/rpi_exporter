@@ -71,7 +71,7 @@ class RpiCollector(object):
                 cpuTemp = float(f.read()) / 1000.0
         # get GPU temp
         gpuTemp = 0
-        rtn, stdout, stderr = runCommand('/opt/vc/bin/vcgencmd measure_temp')
+        rtn, stdout, stderr = runCommand('/usr/bin/vcgencmd measure_temp')
         if rtn == 0:
             match = RpiCollector.__gpuTempRe.match(stdout)
             if match:
