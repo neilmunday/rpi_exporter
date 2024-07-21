@@ -58,7 +58,7 @@ class RpiCollector(object):
     '''
 
     __cpuTempFile = '/sys/devices/virtual/thermal/thermal_zone0/hwmon0/temp1_input'
-    __gpuTempRe = re.compile('temp=([0-9]+\.[0-9]+)')
+    __gpuTempRe = re.compile(r'temp=([0-9]+\.[0-9]+)')
 
     def __init__(self):
             pass
