@@ -6,7 +6,7 @@ arch=('any')
 license=('GPL')
 depends=('python' 'python-prometheus_client')
 source=('rpi_exporter' 'rpi_exporter.service')
-md5sums=('2f8514832a6efbf3eabcb9b3549c828e' '4f782b90fe617d310a6141f141a52c99')
+md5sums=('52fdeb1774f6920b0be98b15fc954196 '4f782b90fe617d310a6141f141a52c99')
 
 package() {
   install -d "$pkgdir"/usr/lib/systemd/system
